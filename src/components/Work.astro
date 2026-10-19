@@ -1,0 +1,482 @@
+---
+import SectionHead from './SectionHead.astro';
+import { work, statusLabel } from '../data/site.ts';
+
+// torn receipt edge
+const zig = Array.from({ length: 13 }, (_, i) => `${(i * 100) / 12}% ${i % 2 ? 100 : 94}%`).join(', ');
+const receiptClip = `polygon(0 0, 100% 0, ${zig.split(', ').reverse().join(', ')})`;
+const sheets = [
+  { name: 'sales.xlsx', x: -32, y: -14, r: -14 },
+  { name: 'stock_v3.xlsx', x: 30, y: -18, r: 11 },
+  { name: 'FINAL_final.xlsx', x: -36, y: 16, r: 8 },
+  { name: 'orders (2).xlsx', x: 33, y: 15, r: -9 },
+  { name: 'accounts.xlsx', x: 2, y: -24, r: 4 },
+];
+---
+
+<section id="work" class="section s-paper-2 lines" aria-labelledby="work-title">
+  <SectionHead index="04" label="Selected work" aside="Concept studies, labelled as such" />
+  <div class="wrap grid head">
+    <h2 id="work-title" class="h-xl">Selected <span class="mark">work.</span></h2>
+    <p class="intro mu">
+      Client case studies are published here only with the client's permission. Until then, these are concept studies: how we approach the
+      problems the studio is built to solve. None of them is presented as a client deployment.
+    </p>
+  </div>
+
+  <ol class="wrap list">
+    {
+      work.map((w, i) => (
+        <li class={`item item-${i + 1} grid rv`}>
+          <span class="idx" aria-hidden="true">
+            0{i + 1}
+          </span>
+
+          <div class={`art art-${w.artifact}`} aria-hidden="true">
+            {w.artifact === 'receipt' && (
+              <>
+                <span class="counter" />
+                <span class="rshadow" />
+                <div class="paper" style={`clip-path:${receiptClip}`}>
+                  <b>Counter 01</b>
+                  <span>Rice 25 kg ... 2,480</span>
+                  <span>Oil 5 L ...... 3,920</span>
+                  <span>Tea 1 kg ....... 560</span>
+                  <b>Total ₹ 6,960</b>
+                </div>
+                <span class="badge mono">
+                  <i />
+                  <span class="off">Offline · saved on device</span>
+                  <span class="on">Back online · synced</span>
+                </span>
+              </>
+            )}
+            {w.artifact === 'ledger' && (
+              <>
+                <span class="rshadow" />
+                <div class="stack">
+                  {['WED', 'TUE', 'MON'].map((g, j) => (
+                    <div class="card" style={`--i:${j}`}>
+                      <span class="mono">{g}</span>
+                      <i style={`--w:${[0.4, 0.7, 0.55][j]}`} />
+                      <i style={`--w:${[0.8, 0.3, 0.65][j]}`} />
+                      <i style={`--w:${[0.5, 0.6, 0.2][j]}`} />
+                    </div>
+                  ))}
+                </div>
+                <span class="badge mono">
+                  <i />
+                  <span>3 teams · one schedule</span>
+                </span>
+              </>
+            )}
+            {w.artifact === 'flow' && (
+              <>
+                {sheets.map((s) => (
+                  <span class="sheet mono" style={`--x:${s.x};--y:${s.y};--r:${s.r}deg`}>
+                    {s.name}
+                  </span>
+                ))}
+                <div class="sys">
+                  <b>1</b>
+                  <span class="mono">system · roles · audit trail</span>
+                </div>
+              </>
+            )}
+            <span class="mono fig">
+              fig. 03.{i + 1} — {w.status === 'concept' ? 'concept' : 'project'}
+            </span>
+          </div>
+
+          <div class="info">
+            <p class={`status mono ${w.status}`}>{statusLabel[w.status]}</p>
+            <p class="mono mu">
+              {w.category} / {w.sector}
+            </p>
+            <h3>{w.title}</h3>
+            <dl>
+              <div>
+                <dt class="mono">Problem</dt>
+                <dd>{w.problem}</dd>
+              </div>
+              <div>
+                <dt class="mono">Approach</dt>
+                <dd>{w.approach}</dd>
+              </div>
+              {w.stack.length > 0 && (
+                <div>
+                  <dt class="mono">Stack</dt>
+                  <dd>{w.stack.join(' / ')}</dd>
+                </div>
+              )}
+            </dl>
+            {w.href ? (
+              <a class="tlink" href={w.href}>
+                Read the case study<span class="sr-only">: {w.title}</span> <span class="arr" aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <a class="tlink" href="#contact" data-type={w.type}>
+                Discuss a system like this<span class="sr-only">: {w.category.toLowerCase()}</span>{' '}
+                <span class="arr" aria-hidden="true">→</span>
+              </a>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .head {
+    row-gap: 20px;
+    margin-bottom: clamp(48px, 7vw, 112px);
+  }
+  .head h2 {
+    grid-column: 1 / 8;
+  }
+  .intro {
+    grid-column: 8 / -1;
+    align-self: end;
+    max-width: 52ch;
+  }
+  .list {
+    display: grid;
+    gap: clamp(64px, 9vw, 140px);
+  }
+  .item {
+    position: relative;
+    row-gap: 28px;
+    align-items: start;
+  }
+  .item .idx {
+    position: absolute;
+    z-index: 2;
+    top: -0.42em;
+    pointer-events: none;
+  }
+
+  /* alternating scale and position on one grid */
+  .item-1 .art {
+    grid-column: 1 / 9;
+    aspect-ratio: 4 / 3;
+  }
+  .item-1 .info {
+    grid-column: 9 / -1;
+    align-self: end;
+  }
+  .item-1 .idx {
+    left: -0.06em;
+  }
+  .item-2 .info {
+    grid-column: 1 / 5;
+    grid-row: 1;
+    align-self: center;
+  }
+  .item-2 .art {
+    grid-column: 6 / -1;
+    grid-row: 1;
+    aspect-ratio: 16 / 10;
+  }
+  .item-2 .idx {
+    left: calc((100% + var(--gap)) * 5 / 12 - 0.06em);
+  }
+  .item-3 .art {
+    grid-column: 1 / -1;
+    aspect-ratio: 21 / 8;
+  }
+  .item-3 .info {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: 12px;
+  }
+  .item-3 .info > :is(.status, .mono, h3) {
+    grid-column: 1 / 5;
+  }
+  .item-3 dl {
+    grid-column: 5 / -1;
+    grid-row: 1 / 5;
+    grid-template-columns: 1fr 1fr;
+  }
+  .item-3 .tlink {
+    grid-column: 1 / 5;
+  }
+  .item-3 .idx {
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  .info {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+  }
+  .status {
+    padding: 4px 8px;
+    border: var(--rule) solid var(--ink);
+  }
+  .status.concept {
+    background: var(--paper);
+    color: var(--hi);
+    border-color: var(--hi);
+  }
+  .status.client {
+    background: var(--accent);
+  }
+  .info h3 {
+    font-size: clamp(1.8rem, 3vw, 2.9rem);
+    text-transform: uppercase;
+    margin: 6px 0 4px;
+  }
+  dl {
+    display: grid;
+    gap: 16px 32px;
+  }
+  dt {
+    margin-bottom: 4px;
+    color: var(--mu);
+  }
+
+  /* ---------- artifacts: interface fragments arranged like objects on a plinth ---------- */
+  .art {
+    position: relative;
+    overflow: hidden;
+    container-type: inline-size;
+    border: var(--rule) solid var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(rgb(20 17 15 / 0.07) 1px, transparent 1px), linear-gradient(90deg, rgb(20 17 15 / 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    perspective: 1200px;
+    transition: box-shadow 0.4s var(--ease);
+  }
+  .item:is(:hover, :focus-within) .art {
+    box-shadow: 10px 10px 0 var(--ink);
+  }
+  .fig {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-size: 0.6875rem;
+    color: var(--mu);
+  }
+  .badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: clamp(0.6rem, 1.4cqw, 0.75rem);
+  }
+  .badge i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--steel);
+    box-shadow: 0 0 0 2px var(--paper);
+  }
+  /* round shadows under square things: the site's recurring illusion */
+  .rshadow {
+    position: absolute;
+    left: 50%;
+    width: 40%;
+    aspect-ratio: 4 / 1;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(20 17 15 / 0.3), transparent);
+    transition: scale 0.8s var(--ease);
+  }
+
+  /* receipt: a bill that kept printing while the internet was down */
+  .counter {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    bottom: 10%;
+    height: 12%;
+    background: var(--ink);
+    box-shadow: 0 -12px 0 var(--steel);
+  }
+  .art-receipt .rshadow {
+    bottom: 22%;
+  }
+  .paper {
+    position: absolute;
+    left: 50%;
+    bottom: 32%;
+    width: 36%;
+    display: grid;
+    gap: 0.5em;
+    padding: 6% 5% 9%;
+    background: #fff;
+    border: var(--rule) solid var(--ink);
+    font: 500 clamp(0.55rem, 1.7cqw, 0.95rem) / 1.3 var(--mono);
+    white-space: pre;
+    transform: translateX(-50%) rotateX(16deg) rotateZ(-7deg);
+    transition: transform 0.9s var(--ease);
+  }
+  .paper b {
+    font-weight: 500;
+    padding: 0.3em 0;
+    border-block: 2px solid var(--ink);
+  }
+  .item:is(:hover, :focus-within) .art-receipt .paper {
+    transform: translateX(-50%) translateY(-10%) rotateX(4deg) rotateZ(-2deg);
+  }
+  .item:is(:hover, :focus-within) .art-receipt .rshadow {
+    scale: 0.7;
+  }
+  .badge .on {
+    display: none;
+  }
+  .item:is(:hover, :focus-within) .badge .on {
+    display: inline;
+  }
+  .item:is(:hover, :focus-within) .badge .off {
+    display: none;
+  }
+  .item:is(:hover, :focus-within) .art-receipt .badge i {
+    background: var(--accent);
+  }
+
+  /* ledger: three days of a shared schedule, stacked like slabs, fanning out on focus */
+  .art-ledger .rshadow {
+    top: 62%;
+    width: 46%;
+  }
+  .stack {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 40%;
+    aspect-ratio: 16 / 10;
+    transform-style: preserve-3d;
+    transform: translate(-50%, -50%) rotateX(56deg) rotateZ(-38deg);
+  }
+  .card {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: start;
+    gap: 9%;
+    padding: 7%;
+    background: var(--paper);
+    border: var(--rule) solid var(--ink);
+    transform: translateZ(calc(var(--i) * 3cqw));
+    transition: transform 0.9s var(--ease);
+  }
+  .card:last-child {
+    background: var(--accent);
+  }
+  .card i {
+    display: block;
+    height: 7%;
+    min-height: 4px;
+    width: calc(var(--w) * 100%);
+    background: var(--ink);
+  }
+  .card .mono {
+    font-size: clamp(0.55rem, 1.6cqw, 0.8rem);
+  }
+  .item:is(:hover, :focus-within) .card {
+    transform: translateZ(calc(var(--i) * 9cqw));
+  }
+  .art-ledger .badge i {
+    background: var(--accent);
+  }
+
+  /* flow: five spreadsheets collapse into one system */
+  .art-flow {
+    background-color: var(--paper);
+  }
+  .sheet {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 15%;
+    aspect-ratio: 4 / 3;
+    display: grid;
+    align-items: end;
+    padding: 0.6em;
+    background-color: #fff;
+    background-image:
+      linear-gradient(rgb(20 17 15 / 0.2) 1px, transparent 1px), linear-gradient(90deg, rgb(20 17 15 / 0.2) 1px, transparent 1px);
+    background-size: 25% 20%;
+    border: var(--rule) solid var(--ink);
+    font-size: clamp(0.5rem, 1cqw, 0.7rem);
+    text-transform: none;
+    translate: calc(-50% + var(--x) * 1cqw) calc(-50% + var(--y) * 1cqw);
+    rotate: var(--r);
+    transition:
+      translate 0.9s var(--ease),
+      rotate 0.9s var(--ease),
+      scale 0.9s var(--ease),
+      opacity 0.5s 0.3s;
+  }
+  .item:is(:hover, :focus-within) .sheet {
+    translate: -50% -50%;
+    rotate: 0deg;
+    scale: 0.4;
+    opacity: 0;
+  }
+  .sys {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 1.4em 2em;
+    background: var(--ink);
+    color: var(--accent);
+    border: var(--rule) solid var(--ink);
+    box-shadow: 8px 8px 0 var(--accent);
+    transition: scale 0.9s var(--ease);
+  }
+  .sys b {
+    font: 800 clamp(2rem, 7cqw, 5rem) / 0.9 var(--display);
+  }
+  .sys .mono {
+    color: var(--paper);
+    font-size: clamp(0.55rem, 1.2cqw, 0.75rem);
+  }
+  .item:is(:hover, :focus-within) .sys {
+    scale: 1.12;
+  }
+
+  @media (max-width: 899px) {
+    .head h2,
+    .intro,
+    .item :is(.art, .info),
+    .item-3 .info > *,
+    .item-3 dl {
+      grid-column: 1 / -1 !important;
+      grid-row: auto !important;
+    }
+    .item-2 .art {
+      order: -1;
+    }
+    .item .art {
+      aspect-ratio: 4 / 3;
+    }
+    .item-3 .art {
+      aspect-ratio: 16 / 10;
+    }
+    .item-3 dl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .item .idx,
+    .item-3 .idx {
+      left: auto;
+      right: 0;
+      translate: none;
+      font-size: 4.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,200 @@
+---
+import SectionHead from './SectionHead.astro';
+import Glyph from './Glyph.astro';
+import { services } from '../data/site.ts';
+
+const count = services.reduce((n, s) => n + s.includes.length, 0);
+---
+
+<section id="services" class="section s-paper lines" aria-labelledby="services-title">
+  <SectionHead index="02" label="Services" aside={`${services.length} disciplines / ${count} capabilities`} />
+  <div class="wrap grid head">
+    <h2 id="services-title" class="h-xl">What breaks. What we build <span class="mark">instead.</span></h2>
+    <p class="lead intro mu">
+      Software, systems and design for businesses that have outgrown their spreadsheets, their templates, or the one person who knows how
+      everything works.
+    </p>
+  </div>
+
+  <div class="wrap">
+    <ol class="mods">
+      {
+        services.map((s, i) => (
+          <li class={`mod mod-${i + 1} rv`} style={`--d:${i % 2}`}>
+            <div class="mod-top">
+              <span class="idx" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <Glyph kind={s.glyph} />
+            </div>
+            <div class="mod-a">
+              <h3>{s.title}</h3>
+              <p class="breaks">
+                <span class="mono">What breaks</span>
+                {s.breaks}
+              </p>
+            </div>
+            <div class="mod-b">
+              <p>{s.solution}</p>
+              <ul class="inc">
+                {s.includes.map((x) => (
+                  <li class="mono">{x}</li>
+                ))}
+              </ul>
+              <a class="tlink" href="#contact" data-type={s.type}>
+                Start with this<span class="sr-only">: {s.title}</span> <span class="arr" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .head {
+    row-gap: 24px;
+    margin-bottom: clamp(40px, 6vw, 88px);
+  }
+  .head h2 {
+    grid-column: 1 / 9;
+  }
+  .intro {
+    grid-column: 9 / -1;
+    align-self: end;
+    font-size: var(--fs-body);
+    line-height: 1.5;
+  }
+
+  .mods {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    border-top: var(--rule) solid var(--ink);
+    border-left: var(--rule) solid var(--ink);
+  }
+  .mod {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 22px;
+    padding: clamp(20px, 2.6vw, 40px);
+    border-right: var(--rule) solid var(--ink);
+    border-bottom: var(--rule) solid var(--ink);
+    background: var(--bg);
+    color: var(--fg);
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .mod-1,
+  .mod-4 {
+    grid-column: span 7;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(20px, 3vw, 48px);
+  }
+  .mod-1 .mod-top,
+  .mod-4 .mod-top {
+    grid-column: 1 / -1;
+  }
+  .mod-2,
+  .mod-3 {
+    grid-column: span 5;
+  }
+  /* the module inverts on hover or keyboard focus: the grid stays, the surface flips */
+  .mod:hover,
+  .mod:focus-within {
+    --bg: var(--ink);
+    --fg: var(--paper);
+    --mu: #aaa79d;
+    --focus: var(--accent);
+  }
+  .mod-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .mod .idx {
+    transition:
+      color 0.3s,
+      -webkit-text-stroke-color 0.3s;
+  }
+  .mod:is(:hover, :focus-within) .idx {
+    color: var(--accent);
+    -webkit-text-stroke-color: var(--accent);
+  }
+  .mod :global(.glyph) {
+    transition: transform 0.7s var(--ease);
+  }
+  .mod:is(:hover, :focus-within) :global(.glyph) {
+    transform: rotate(-12deg) scale(1.08);
+  }
+  .mod h3 {
+    font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+    font-stretch: 100%;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .breaks {
+    display: grid;
+    gap: 6px;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.35;
+  }
+  .breaks .mono {
+    font-style: normal;
+    color: var(--hi);
+  }
+  .mod:is(:hover, :focus-within) .breaks .mono {
+    color: var(--accent);
+  }
+  .mod-b {
+    display: grid;
+    gap: 20px;
+    align-content: start;
+  }
+  .mod-b > p {
+    color: var(--mu);
+    transition: color 0.3s;
+  }
+  .inc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .inc li {
+    padding: 5px 8px;
+    border: 1px solid currentColor;
+  }
+  .tlink {
+    justify-self: start;
+  }
+
+  @media (max-width: 1080px) {
+    .mod-1,
+    .mod-4 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .mod-1,
+    .mod-2,
+    .mod-3,
+    .mod-4 {
+      grid-column: span 6;
+    }
+  }
+  @media (max-width: 899px) {
+    .head h2,
+    .intro {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 700px) {
+    .mod-1,
+    .mod-2,
+    .mod-3,
+    .mod-4 {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

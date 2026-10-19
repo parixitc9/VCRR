@@ -1,0 +1,32 @@
+---
+// The Prompt lockup: chevron + block cursor + VCRR. Chevron follows currentColor, the block is the accent.
+import { chevron } from '../data/site.ts';
+interface Props {
+  class?: string;
+}
+const { class: cls } = Astro.props;
+---
+
+<span class:list={['wm', cls]}>
+  <svg viewBox="0 0 188 148" aria-hidden="true">
+    <path d={chevron} fill="currentColor"></path>
+    <rect x="140" y="106" width="48" height="42" fill="var(--accent)"></rect>
+  </svg>
+  <span>VCRR</span>
+</span>
+
+<style>
+  .wm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font: 800 1.35rem / 1 var(--display);
+    font-stretch: 125%;
+    letter-spacing: -0.04em;
+  }
+  .wm svg {
+    width: 1.15em;
+    height: auto;
+    flex: none;
+  }
+</style>

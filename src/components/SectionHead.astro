@@ -1,0 +1,71 @@
+---
+// The structural band that opens every section: index, name, a rule, and a technical aside.
+interface Props {
+  index: string;
+  label: string;
+  aside?: string;
+}
+const { index, label, aside } = Astro.props;
+---
+
+<div class="sh wrap" aria-hidden="true">
+  <span class="mono sh-i">§{index}</span>
+  <span class="mono sh-l">{label}</span>
+  <span class="sh-rule"></span>
+  {aside && <span class="mono sh-a">{aside}</span>}
+</div>
+
+<style>
+  .sh {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: clamp(32px, 5vw, 72px);
+  }
+  .sh-i {
+    padding: 4px 8px;
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .sh-l::before {
+    content: '> ';
+    color: var(--hi);
+  }
+  /* a build bar: fills with the section's scroll progress (--sp from scripts/main.ts), cursor on its edge */
+  .sh-rule {
+    position: relative;
+    flex: 1;
+    height: var(--rule);
+    background: color-mix(in srgb, var(--fg) 18%, transparent);
+  }
+  .sh-rule::before,
+  .sh-rule::after {
+    content: '';
+    position: absolute;
+  }
+  .sh-rule::before {
+    inset: 0;
+    background: var(--fg);
+    transform: scaleX(var(--sp, 1));
+    transform-origin: 0 50%;
+  }
+  .sh-rule::after {
+    top: 50%;
+    left: calc(var(--sp, 1) * 100%);
+    width: 12px;
+    height: 11px;
+    background: var(--accent);
+    translate: -100% -50%;
+  }
+  :global(.s-amber) .sh-rule::after {
+    background: var(--ink);
+  }
+  .sh-a {
+    color: var(--mu);
+  }
+  @media (max-width: 560px) {
+    .sh-a {
+      display: none;
+    }
+  }
+</style>

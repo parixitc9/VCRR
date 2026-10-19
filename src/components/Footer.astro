@@ -1,0 +1,156 @@
+---
+import Wordmark from './Wordmark.astro';
+import { site, nav, channels } from '../data/site.ts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot s-ink">
+  <div class="wrap">
+    <p class="giant" aria-hidden="true">VCRR</p>
+    <div class="grid cols">
+      <div class="c-brand">
+        <Wordmark />
+        <p class="mu">{site.tagline}. A digital software studio founded by four partners.</p>
+      </div>
+      <nav class="c-nav" aria-label="Footer">
+        <h2 class="mono mu">Navigate</h2>
+        <ul>
+          {
+            nav.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="c-contact">
+        <h2 class="mono mu">Contact</h2>
+        <ul>
+          {
+            channels().map((c) => (
+              <li>
+                <span class="mono mu">{c.label}</span>
+                {c.href ? <a href={c.href}>{c.value}</a> : <span>{c.value}</span>}
+              </li>
+            ))
+          }
+          <li>
+            <span class="mono mu">Studio</span>
+            <span>{site.address}</span>
+          </li>
+        </ul>
+        {
+          site.social.length > 0 && (
+            <ul class="social">
+              {site.social.map((s) => (
+                <li>
+                  <a href={s.href} rel="me noopener">
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+    <div class="base mono">
+      <span>© {year} {site.name}. All rights reserved.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    padding: clamp(40px, 6vw, 80px) 0 28px;
+    border-top: 6px solid var(--accent);
+    overflow: hidden;
+  }
+  .giant {
+    font: 800 clamp(5rem, 27vw, 26rem) / 0.78 var(--display);
+    font-stretch: 125%;
+    letter-spacing: -0.06em;
+    margin: 0 0 clamp(32px, 5vw, 64px) -0.04em;
+    color: var(--paper);
+    -webkit-text-stroke: 0;
+  }
+  .giant::selection {
+    color: var(--ink);
+  }
+  .cols {
+    row-gap: 40px;
+    padding: 32px 0;
+    border-top: var(--rule) solid var(--paper);
+  }
+  .c-brand {
+    grid-column: 1 / 6;
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .c-brand p {
+    max-width: 34ch;
+  }
+  .c-nav {
+    grid-column: 7 / 9;
+  }
+  .c-contact {
+    grid-column: 9 / -1;
+  }
+  .cols h2 {
+    margin-bottom: 14px;
+  }
+  .c-nav ul {
+    display: grid;
+  }
+  .c-nav a {
+    display: inline-block;
+    padding: 9px 0;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .c-nav a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .c-contact ul {
+    display: grid;
+  }
+  .c-contact li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--ln);
+    overflow-wrap: anywhere;
+  }
+  .social {
+    margin-top: 16px;
+  }
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ln);
+    color: var(--mu);
+  }
+  .base a {
+    padding: 8px 0;
+    margin-block: -8px;
+    color: var(--accent);
+  }
+  @media (max-width: 899px) {
+    .c-brand,
+    .c-contact {
+      grid-column: 1 / -1;
+    }
+    .c-nav {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

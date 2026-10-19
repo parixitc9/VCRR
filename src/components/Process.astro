@@ -1,0 +1,172 @@
+---
+import SectionHead from './SectionHead.astro';
+import { steps, chevron } from '../data/site.ts';
+---
+
+<section id="process" class="section s-ink lines" aria-labelledby="process-title">
+  <SectionHead index="06" label="Process" aside="Six steps / one direction" />
+  <div class="wrap grid head">
+    <h2 id="process-title" class="h-xl">Six steps. <span class="mark">One direction.</span></h2>
+    <p class="intro mu">From the first conversation to software you rely on. Every step ends with something you can hold us to.</p>
+  </div>
+
+  <!-- a concrete staircase: each tread is one step, each rises from the last -->
+  <ol class="wrap stairs">
+    {
+      steps.map((s, i) => (
+        <li class="step rv" style={`--i:${i};--d:${i}`}>
+          <span class="num" aria-hidden="true">
+            0{i + 1}
+          </span>
+          <h3>
+            <span class="sr-only">Step {i + 1}: </span>
+            {s.step}
+          </h3>
+          <p>{s.body}</p>
+          <p class="deliv">
+            <span class="mono">You receive</span>
+            {s.deliverable}
+          </p>
+          {i === steps.length - 1 && (
+            <span class="arrival" aria-hidden="true">
+              <svg viewBox="0 0 188 148">
+                <path d={chevron} fill="var(--paper)" />
+                <rect x="140" y="106" width="48" height="42" fill="var(--accent)" />
+              </svg>
+              <span class="mono">fig. 06 — delivered</span>
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .head {
+    row-gap: 20px;
+    margin-bottom: clamp(48px, 7vw, 120px);
+  }
+  .head h2 {
+    grid-column: 1 / 9;
+  }
+  .intro {
+    grid-column: 9 / -1;
+    align-self: end;
+  }
+  .stairs {
+    --rise: clamp(28px, 4.2vw, 72px);
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    align-items: end;
+    padding-top: calc(var(--rise) * 2);
+  }
+  .step {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    margin-bottom: calc(var(--i) * var(--rise));
+    padding: 18px clamp(12px, 1.3vw, 22px) 22px;
+    border-top: 6px solid var(--accent);
+    border-left: var(--rule) solid var(--paper);
+  }
+  /* the concrete under each tread */
+  .step::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--rule) * -1);
+    right: 0;
+    top: 100%;
+    height: calc(var(--i) * var(--rise));
+    border-left: var(--rule) solid var(--paper);
+    background: repeating-linear-gradient(-45deg, rgb(243 237 227 / 0.14) 0 1px, transparent 1px 9px);
+  }
+  .num {
+    font: 800 clamp(2.4rem, 4vw, 4rem) / 0.8 var(--display);
+    font-stretch: 125%;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  .step h3 {
+    font-size: clamp(1.3rem, 1.9vw, 1.9rem);
+    text-transform: uppercase;
+    font-stretch: 105%;
+  }
+  .step p {
+    font-size: var(--fs-small);
+    color: var(--mu);
+    hyphens: auto;
+  }
+  .deliv {
+    display: grid;
+    gap: 4px;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px dashed rgb(243 237 227 / 0.3);
+    color: var(--fg) !important;
+  }
+  .deliv .mono {
+    color: var(--accent);
+  }
+  .arrival {
+    position: absolute;
+    bottom: calc(100% + 18px);
+    left: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .arrival svg {
+    width: 44px;
+    height: auto;
+  }
+  :global(.m) .arrival svg {
+    animation: bob 3.2s ease-in-out infinite alternate;
+  }
+  @keyframes bob {
+    to {
+      translate: 0 -8px;
+    }
+  }
+  .arrival .mono {
+    font-size: 0.6875rem;
+    color: var(--mu);
+  }
+
+  @media (max-width: 1100px) {
+    .stairs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 40px;
+      padding-top: 0;
+    }
+    .step {
+      margin-bottom: calc(var(--i) * 0px);
+    }
+    .step::after {
+      display: none;
+    }
+    .arrival {
+      position: static;
+      order: -1;
+    }
+  }
+  @media (max-width: 899px) {
+    .head h2,
+    .intro {
+      grid-column: 1 / -1;
+    }
+  }
+  /* on phones the staircase turns sideways: each step steps in from the left */
+  @media (max-width: 640px) {
+    .stairs {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0;
+    }
+    .step {
+      margin-left: calc(var(--i) * 10px);
+      border-top-width: 4px;
+      padding-bottom: 28px;
+    }
+  }
+</style>

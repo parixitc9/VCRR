@@ -1,0 +1,219 @@
+---
+import SectionHead from './SectionHead.astro';
+import { manifesto, principles, chevron } from '../data/site.ts';
+---
+
+<section id="about" class="section s-amber lines manifesto" aria-labelledby="about-title">
+  <SectionHead index="01" label="About / Manifesto" aside="Four partners · four principles" />
+  <div class="wrap grid head">
+    <h2 id="about-title" class="h-l">
+      VCRR is a studio of four partners, building software for the way businesses <span class="mark">actually work</span>.
+    </h2>
+  </div>
+
+  <ol class="wrap statements">
+    {
+      manifesto.map((m, i) => (
+        <li class={`st st-${i + 1} grid rv`}>
+          <span class="idx" aria-hidden="true">0{i + 1}</span>
+          <p class="mono tag">
+            M.0{i + 1} — {m.tag}
+          </p>
+          <p class="line">{m.line}</p>
+          <p class="note">{m.note}</p>
+          {i === 2 && (
+            <span class="shard" aria-hidden="true">
+              <svg viewBox="0 0 188 148">
+                <path d={chevron} fill="var(--paper)" />
+                <rect x="140" y="106" width="48" height="42" fill="var(--accent)" />
+              </svg>
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="wrap principles">
+    <h3 class="mono mu">Working principles</h3>
+    <ul class="grid">
+      {
+        principles.map((p, i) => (
+          <li class="rv" style={`--d:${i}`}>
+            <span class="mono">P.0{i + 1}</span>
+            <h4>{p.title}</h4>
+            <p>{p.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .head h2 {
+    grid-column: 1 / 10;
+    max-width: 22ch;
+  }
+  .statements {
+    margin-top: clamp(48px, 7vw, 112px);
+    display: grid;
+  }
+  .st {
+    position: relative;
+    align-items: end;
+    row-gap: 14px;
+    padding: clamp(28px, 4vw, 56px) 0;
+    border-top: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  }
+  .st .idx {
+    grid-row: 1 / 4;
+    align-self: start;
+    font-size: min(7.2vw, 8.5rem);
+    -webkit-text-stroke-color: color-mix(in srgb, var(--fg) 55%, transparent);
+  }
+  .tag {
+    color: var(--hi);
+  }
+  .line {
+    font: 800 var(--fs-l) / 0.98 var(--display);
+    font-stretch: 100%;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .note {
+    color: var(--mu);
+    max-width: 44ch;
+  }
+  /* each statement takes a different position on the same grid */
+  .st-1 .idx {
+    grid-column: 1 / 3;
+  }
+  .st-1 :is(.tag, .line, .note) {
+    grid-column: 3 / 11;
+  }
+  .st-2 .idx {
+    grid-column: 11 / -1;
+    justify-self: end;
+  }
+  .st-2 :is(.tag, .line) {
+    grid-column: 4 / 11;
+    text-align: right;
+  }
+  .st-2 .note {
+    grid-column: 6 / 11;
+    justify-self: end;
+    text-align: right;
+  }
+  .st-3 .idx {
+    grid-column: 1 / 3;
+  }
+  .st-3 :is(.tag, .line) {
+    grid-column: 3 / 9;
+  }
+  .st-3 .note {
+    grid-column: 3 / 8;
+  }
+  .st-4 .idx {
+    grid-column: 4 / 6;
+  }
+  .st-4 :is(.tag, .line, .note) {
+    grid-column: 6 / -1;
+  }
+  :global(.m) .st.rv {
+    transform: translateX(-56px);
+  }
+  :global(.m) .st.rv:nth-child(even) {
+    transform: translateX(56px);
+  }
+  :global(.m) .st.rv.in {
+    transform: none;
+  }
+
+  /* a panel that came loose from the monolith, still drifting */
+  .shard {
+    position: absolute;
+    right: 6%;
+    top: 18%;
+    width: clamp(84px, 10vw, 150px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    border-radius: 22%;
+    transform: perspective(600px) rotateX(38deg) rotateY(-28deg) rotateZ(14deg);
+    box-shadow: 18px 26px 0 -6px rgb(20 17 15 / 0.3);
+  }
+  .shard svg {
+    width: 52%;
+  }
+  :global(.m) .shard {
+    animation: drift 9s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    to {
+      transform: perspective(600px) rotateX(24deg) rotateY(-40deg) rotateZ(4deg) translateY(-18px);
+    }
+  }
+
+  .principles {
+    margin-top: clamp(56px, 8vw, 128px);
+  }
+  .principles h3 {
+    margin-bottom: 20px;
+  }
+  .principles ul {
+    row-gap: 32px;
+  }
+  .principles li {
+    grid-column: span 3;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding-top: 16px;
+    border-top: var(--rule) solid var(--fg);
+  }
+  .principles li .mono {
+    color: var(--hi);
+  }
+  .principles h4 {
+    font: 700 1.3rem / 1.15 var(--body);
+    letter-spacing: -0.01em;
+  }
+  .principles p {
+    color: var(--mu);
+    font-size: var(--fs-small);
+  }
+
+  @media (max-width: 899px) {
+    .head h2,
+    .st :is(.tag, .line, .note),
+    .st-2 :is(.tag, .line, .note) {
+      grid-column: 1 / -1;
+      text-align: left;
+      justify-self: start;
+    }
+    .st .idx,
+    .st-2 .idx,
+    .st-4 .idx {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      justify-self: start;
+      font-size: 3.5rem;
+    }
+    .shard {
+      top: 24px;
+      right: 0;
+      width: 72px;
+    }
+    .principles li {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 560px) {
+    .principles li {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

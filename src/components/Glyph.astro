@@ -1,0 +1,83 @@
+---
+// Geometric marks for the service modules. Strokes follow currentColor so they invert with the module.
+import type { Glyph } from '../data/site.ts';
+interface Props {
+  kind: Glyph;
+}
+const { kind } = Astro.props;
+const slab = (y: number) => ({
+  top: `60,${y - 14} 92,${y} 60,${y + 14} 28,${y}`,
+  left: `28,${y} 60,${y + 14} 60,${y + 22} 28,${y + 8}`,
+  right: `60,${y + 14} 92,${y} 92,${y + 8} 60,${y + 22}`,
+});
+---
+
+<svg class="glyph" viewBox="0 0 120 120" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter">
+  {
+    kind === 'slabs' &&
+      [84, 60, 36].map((y, i) => {
+        const s = slab(y);
+        return (
+          <g transform={`translate(${(i - 1) * 6} 0)`}>
+            <polygon points={s.left} class="f-bg" />
+            <polygon points={s.right} class="f-bg" />
+            <polygon points={s.top} class={i === 2 ? 'f-accent' : 'f-bg'} />
+          </g>
+        );
+      })
+  }
+  {
+    kind === 'cube' && (
+      <>
+        <polygon points="60,60 95,40 95,80 60,100" class="f-hi" />
+        <polygon points="60,20 95,40 60,60 25,40" class="f-accent" />
+        <polygon points="60,20 95,40 95,80 60,100 25,80 25,40" />
+        <path d="M60 60V100M60 60 25 40M60 60 95 40" />
+        <path d="M25 80 60 60" stroke-dasharray="4 4" />
+        <circle cx="100" cy="100" r="10" class="f-bg" />
+        <path d="M93 107 107 93" />
+      </>
+    )
+  }
+  {
+    kind === 'frames' && (
+      <>
+        <rect x="12" y="22" width="76" height="62" class="f-bg" />
+        <path d="M12 34H88" />
+        <circle cx="19" cy="28" r="1.5" fill="currentColor" />
+        <circle cx="25" cy="28" r="1.5" fill="currentColor" />
+        <rect x="22" y="44" width="34" height="6" class="f-hi" />
+        <path d="M22 60H66M22 68H52" />
+        <rect x="70" y="46" width="36" height="60" class="f-accent" />
+        <path d="M82 100H94" />
+      </>
+    )
+  }
+  {
+    kind === 'compass' && (
+      <>
+        <path d="M24 12V108M60 12V108M96 12V108M12 24H108M12 60H108M12 96H108" stroke-width="1" opacity="0.45" />
+        <circle cx="60" cy="60" r="36" class="f-bg" />
+        <path d="M24 96 96 24" />
+        <rect x="52" y="52" width="16" height="16" class="f-accent" />
+        <circle cx="96" cy="24" r="5" class="f-hi" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .glyph {
+    width: clamp(72px, 7vw, 112px);
+    height: auto;
+  }
+  .f-bg {
+    fill: var(--bg);
+  }
+  .f-accent {
+    fill: var(--accent);
+  }
+  .f-hi {
+    fill: var(--hi);
+  }
+</style>

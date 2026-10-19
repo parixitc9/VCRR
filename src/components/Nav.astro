@@ -1,0 +1,229 @@
+---
+import Wordmark from './Wordmark.astro';
+import { nav } from '../data/site.ts';
+---
+
+<header class="nav s-paper">
+  <div class="bar">
+    <a class="brand" href="#top" aria-label="VCRR, back to top"><Wordmark /></a>
+    <nav class="links" aria-label="Primary">
+      <ul>
+        {
+          nav.map((l, i) => (
+            <li>
+              <a href={l.href}>
+                <span class="mono n" aria-hidden="true">0{i + 1}</span>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <a class="cta" href="#contact">Start a project <span class="arr" aria-hidden="true">↘</span></a>
+    <button class="menu-btn" type="button" popovertarget="menu" aria-label="Open menu">
+      <span aria-hidden="true" class="burger"><i></i><i></i></span>
+      <span class="mono">Menu</span>
+    </button>
+  </div>
+
+  <!-- native popover: focusable, Escape closes it, no scroll locking or custom focus trap needed -->
+  <div id="menu" popover class="menu s-ink" data-menu data-lenis-prevent>
+    <div class="menu-top">
+      <Wordmark />
+      <button class="close mono" type="button" popovertarget="menu" popovertargetaction="hide">Close <span aria-hidden="true">✕</span></button>
+    </div>
+    <nav aria-label="Mobile">
+      <ul>
+        {
+          nav.map((l, i) => (
+            <li>
+              <a href={l.href}>
+                <span class="mono">0{i + 1}</span>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <a class="btn" href="#contact">Start a project <span class="arr" aria-hidden="true">↘</span></a>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: var(--rule) solid var(--ink);
+  }
+  .bar {
+    display: flex;
+    align-items: stretch;
+    height: var(--nav-h);
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    padding-right: 24px;
+    margin-right: auto;
+    text-decoration: none;
+  }
+  .links ul {
+    display: flex;
+    height: 100%;
+    border-left: var(--rule) solid var(--ink);
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 clamp(14px, 1.6vw, 26px);
+    border-right: var(--rule) solid var(--ink);
+    font-weight: 600;
+    font-size: var(--fs-small);
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .links .n {
+    color: var(--mu);
+    transition: color 0.15s;
+  }
+  .links a:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .links a:hover .n {
+    color: var(--accent);
+  }
+  .cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 clamp(16px, 2vw, 28px);
+    background: var(--ink);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .cta:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+  .menu-btn {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    margin-right: calc(var(--gutter) * -1);
+    border: 0;
+    border-left: var(--rule) solid var(--ink);
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .burger {
+    display: grid;
+    gap: 5px;
+  }
+  .burger i {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+  }
+
+  /* mobile menu */
+  .menu {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border: 0;
+    padding: 0 var(--gutter) 32px;
+    flex-direction: column;
+    gap: 32px;
+    overflow-y: auto;
+  }
+  .menu:popover-open {
+    display: flex;
+  }
+  .menu-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-h);
+    border-bottom: var(--rule) solid var(--paper);
+  }
+  .close {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .menu ul {
+    display: grid;
+  }
+  .menu li a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ln);
+    font: 800 clamp(2.4rem, 12vw, 4rem) / 1 var(--display);
+    font-stretch: 112%;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .menu li a:hover,
+  .menu li a:focus-visible {
+    color: var(--accent);
+  }
+  .menu li .mono {
+    color: var(--accent);
+  }
+  .menu .btn {
+    align-self: flex-start;
+  }
+
+  @media (max-width: 1080px) {
+    .links .n {
+      display: none;
+    }
+  }
+  @media (max-width: 899px) {
+    .links,
+    .cta {
+      display: none;
+    }
+    .menu-btn {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  // following an in-page link should also close the menu
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+  menu.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('a')) menu.hidePopover();
+  });
+</script>
