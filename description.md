@@ -1,0 +1,1 @@
+VCRR is a software studio founded by four partners. You describe how your business works and we turn it into software: business management systems, billing and inventory, web and mobile apps, desktop tools and automation. Every project starts from your requirements, not a template.
