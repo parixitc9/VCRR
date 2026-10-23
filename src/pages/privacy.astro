@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { site } from '../data/site.ts';
+---
+
+<Base title={`Privacy policy — ${site.name}`} description={`How ${site.name} handles personal information on this website and in project enquiries.`} home="/">
+  <section class="section s-paper lines" aria-labelledby="privacy-title">
+    <SectionHead index="00" label="Legal" aside="Last updated 23 October 2026" />
+    <div class="wrap">
+      <h1 id="privacy-title" class="h-xl">Privacy <span class="mark">policy.</span></h1>
+      <article class="prose">
+        <p>
+          This policy explains what personal information {site.name} (“we”) collects through this website, why, and what you can do about it.
+          Contact us at <a href={`mailto:${site.email}`}>{site.email}</a> with any question about it.
+        </p>
+
+        <h2>What this website collects</h2>
+        <ul>
+          <li>
+            <strong>Information you send us.</strong> If you send a project brief, we receive what you enter: your name and email address, and
+            optionally your company, budget range and a description of the problem. You also choose a project type. The brief form does not ask
+            for phone numbers, identity documents or payment details. Our server checks the brief, then emails it to us through Google Apps Script.
+          </li>
+          <li>
+            <strong>Server logs.</strong> Our hosting provider, Vercel Inc., processes technical data such as IP address, browser type and the
+            pages requested, to deliver and protect the site. [CONFIRM RETENTION PERIOD WITH THE PROVIDER.]
+          </li>
+          <li>
+            <strong>Spam protection.</strong> The IP address of whoever sends a brief is kept for one hour, only to limit how many briefs one
+            address can send.
+          </li>
+        </ul>
+        <p>
+          This website does not use analytics, advertising trackers, cookies or browser storage. Its fonts and scripts are served from our own
+          domain, so the pages you visit do not send your details to any third party.
+        </p>
+
+        <h2>Why we use it</h2>
+        <p>
+          We use the details in a project brief only to reply to you and to discuss the project you described. We do not add you to a mailing
+          list, sell your information or share it with third parties, except our service providers, who handle it only to run the site and deliver
+          briefs: Vercel Inc. (hosting and the form function) and Google (email delivery through Google Apps Script).
+        </p>
+
+        <h2>How long we keep it</h2>
+        <p>[RETENTION PERIOD, e.g. enquiries that do not become projects are deleted after 12 months.]</p>
+
+        <h2>Your rights</h2>
+        <p>
+          You can ask us to show, correct or delete the personal information we hold about you by writing to {site.email}. Depending on where you
+          live, laws such as India’s Digital Personal Data Protection Act, 2023 may give you further rights. [CONFIRM APPLICABLE LAW AND CONTACT
+          DETAILS FOR DATA QUESTIONS WITH COUNSEL.]
+        </p>
+
+        <h2>Who we are</h2>
+        <p>{site.name} is a software studio founded by four partners. [LEGAL ENTITY NAME.]</p>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prose {
+    max-width: 70ch;
+    display: grid;
+    gap: 18px;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+  }
+  .prose h2 {
+    margin-top: 28px;
+    font: 800 var(--fs-l) / 1 var(--display);
+    text-transform: uppercase;
+  }
+  .prose ul {
+    display: grid;
+    gap: 16px;
+    padding-left: 0;
+    list-style: none;
+  }
+  .prose li {
+    padding-top: 14px;
+    border-top: var(--rule) solid var(--ink);
+  }
+  .prose a {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+</style>

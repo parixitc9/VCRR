@@ -2,6 +2,8 @@
 import Wordmark from './Wordmark.astro';
 import { site, nav, channels } from '../data/site.ts';
 
+const { home = '' } = Astro.props;
+const links = nav.map((l) => ({ ...l, href: home + l.href }));
 const year = new Date().getFullYear();
 ---
 
@@ -17,7 +19,7 @@ const year = new Date().getFullYear();
         <h2 class="mono mu">Navigate</h2>
         <ul>
           {
-            nav.map((l) => (
+            links.map((l) => (
               <li>
                 <a href={l.href}>{l.label}</a>
               </li>
@@ -36,10 +38,6 @@ const year = new Date().getFullYear();
               </li>
             ))
           }
-          <li>
-            <span class="mono mu">Studio</span>
-            <span>{site.address}</span>
-          </li>
         </ul>
         {
           site.social.length > 0 && (
@@ -58,7 +56,10 @@ const year = new Date().getFullYear();
     </div>
     <div class="base mono">
       <span>© {year} {site.name}. All rights reserved.</span>
-      <a href="#top">Back to top ↑</a>
+      <span class="base-links">
+        <a href="/privacy">Privacy policy</a>
+        <a href={home + '#top'}>Back to top ↑</a>
+      </span>
     </div>
   </div>
 </footer>
@@ -143,6 +144,11 @@ const year = new Date().getFullYear();
     padding: 8px 0;
     margin-block: -8px;
     color: var(--accent);
+  }
+  .base-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
   }
   @media (max-width: 899px) {
     .c-brand,

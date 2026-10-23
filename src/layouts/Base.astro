@@ -9,10 +9,13 @@ import displayUrl from '@fontsource-variable/archivo/files/archivo-latin-wdth-no
 interface Props {
   title: string;
   description: string;
+  /** Prefix for in-page links: empty on the home page, '/' everywhere else. */
+  home?: string;
 }
 
-const { title, description } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const { title, description, home = '' } = Astro.props;
+// the static build writes index.html and privacy.html; the canonical URL drops the file name
+const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), Astro.site).href;
 const org = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -59,11 +62,11 @@ const org = JSON.stringify({
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <Nav />
+    <Nav home={home} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <Footer />
+    <Footer home={home} />
     <script>
       import '../scripts/main.ts';
     </script>

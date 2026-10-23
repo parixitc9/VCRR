@@ -3,7 +3,7 @@
 A second, self-contained VCRR website. It has the same Prompt design and colours as `../vcrr-surreal-modern-brutal`, but the copy is broadened: VCRR builds any kind of software from a business's requirements, and billing and inventory are one offering among many. Content lives in `src/data/site.ts`; "What we build" (`components/Builds.astro`) lists example software types.
 
 - **Stack:** Astro 7 (static), plain CSS with tokens, a little vanilla TypeScript, and [Lenis](https://lenis.darkroom.engineering/) for smooth scrolling (the original site uses it too). No shared runtime with the original.
-- **No backend, no analytics, no cookies, no third-party requests.** Fonts are self-hosted via Fontsource.
+- **No database, no analytics, no cookies, no third-party requests on page load.** Fonts are self-hosted via Fontsource. The one backend is the inquiry form's function (see *Inquiry form*).
 
 ## Run it
 
@@ -15,7 +15,7 @@ npm run dev        # http://localhost:4325 (4321-4324 belong to the other two si
 npm run build      # static site in dist/
 npm run preview    # serve dist/ locally
 npm run check      # Astro + TypeScript checks
-npm test           # inquiry-form rules (node:test)
+npm test           # inquiry-form rules and the form endpoint (node:test)
 ```
 
 ## Brand and motion
@@ -31,19 +31,24 @@ npm test           # inquiry-form rules (node:test)
 src/
   data/site.ts         all copy and facts (adapted from the original's src/data/site.ts)
   lib/inquiry.ts       form validation + brief text (tested in inquiry.test.ts)
-  layouts/Base.astro   head/SEO, motion flag, nav, footer
+  layouts/Base.astro   head/SEO, motion flag, nav, footer (home="/" on other pages)
+  pages/privacy.astro  privacy policy, linked from the footer
   components/          Nav, Hero (the film), Manifesto, Services (+Glyph), Builds, Work,
                        Why, Process, Contact, Footer, SectionHead, Wordmark (the lockup)
   scripts/main.ts      Lenis, scroll-linked motion, reveals, "start with this" form preselect
   styles/global.css    tokens, surfaces, grid, buttons, motion
+  lib/inquiry-endpoint.ts  server side of the form (tested in inquiry-endpoint.test.ts)
+api/inquiry.ts         Vercel function behind the form
+apps-script/inquiry.gs Google Apps Script that emails each brief
 ```
 
 ## Content: what is real and what is not
 
-Everything comes from the original site. Nothing was invented. That means:
+Most copy comes from the original site, and nothing there was invented. The exceptions are listed below. That means:
 
-- **Contact details** (`[CONTACT_EMAIL]`, `[COMPANY_PHONE]`, `[WHATSAPP_NUMBER]`, `[OFFICE_ADDRESS]`) are still placeholders in the original. They show as plain text and become links automatically once set in `site.ts`. Social links are hidden while `social` is empty.
-- **Work:** the original has no published case studies, only placeholders. The three entries are **concept studies, labelled on the page as "not a client deployment"**, built from the situations the original describes. Add real projects with `status: 'client'` only with the client's permission.
+- **Privacy policy** (`pages/privacy.astro`) describes what the site does today: no analytics, cookies or browser storage, and fonts served from the site's own domain. Before launch, complete the bracketed fields (log retention, how long enquiries are kept, legal entity name, data-question contact) and have it reviewed by counsel.
+- **Contact details** are set in `site.ts`: one email, four phone numbers and one WhatsApp number. All are Indian mobiles, shown with `+91`. There is no office address on the site. Social links are hidden while `social` is empty.
+- **Work:** four live projects from the portfolio list, each linking to its working site. The problem and approach lines were written from each site's own description or code, so check them. The artwork beside each project is abstract and reused, not a screenshot.
 - **What we build:** the twelve entries in `builds` are examples of software types, not past projects. Edit or extend the list freely.
 - **Commitments** (code ownership, written scope, tested backups, documentation) and the budget ranges are copied as-is. The original's README asks you to confirm these before launch.
 
@@ -51,8 +56,15 @@ Everything comes from the original site. Nothing was invented. That means:
 
 The form validates in the browser (name, email, project type and a 20+ character description are required; company and budget are optional). It never claims a message was sent unless it was.
 
-- **Now (no endpoint):** submitting shows *"Not sent — online sending is not connected yet"* and offers *Copy brief*, plus *Open in email app* once `site.email` is real.
-- **To connect it:** set `PUBLIC_INQUIRY_ENDPOINT` at build time. The form POSTs JSON `{ name, email, company, projectType, budget, description, website }`. It shows *Received* only on a 2xx response and an error (keeping the answers) otherwise. The endpoint must re-validate every field, drop submissions where `website` (spam trap) is filled, rate-limit, and keep any keys server-side.
+The live path is: browser → `/api/inquiry` (a Vercel function) → a Google Apps Script → an email to `vcrrit@gmail.com`. The form shows *Received* only on a 2xx response and keeps the answers on any error.
+
+- **The function** (`api/inquiry.ts`, logic in `src/lib/inquiry-endpoint.ts`) re-checks every field with the browser's rules. It answers submissions where the `website` spam trap is filled as sent, but sends nothing. It refuses bodies over 10 KB and forwards the visitor's IP to the script. The script's URL and secret never reach the browser.
+- **The script** (`apps-script/inquiry.gs`) checks the shared secret, allows 3 briefs per IP per hour and 30 a day, and emails each brief with the sender as reply-to. Its limits live in the script, so they survive restarts.
+- **Environment variables**, set in Vercel under Project → Settings → Environment Variables. Never give a secret a `PUBLIC_` name.
+  - `PUBLIC_INQUIRY_ENDPOINT` = `/api/inquiry`. It is read at build time, so redeploy after changing it.
+  - `INQUIRY_SCRIPT_URL` = the Apps Script web app URL, which ends in `/exec`.
+  - `INQUIRY_SECRET` = a random string, the same value as the script property `INQUIRY_SECRET`.
+- Without `PUBLIC_INQUIRY_ENDPOINT`, the form shows *"Not sent"* and offers *Copy brief* and *Open in email app* instead.
 
 ## Motion and accessibility
 
@@ -62,4 +74,11 @@ The form validates in the browser (name, email, project type and a 20+ character
 
 ## Deploying
 
-Set `SITE_URL` to the production origin (used for the canonical link and Open Graph). No `og:image` is set yet. Add a 1200×630 image and the tags in `layouts/Base.astro` once one exists.
+The site is set up for Vercel. Until a custom domain exists, the canonical, Open Graph and JSON-LD URLs use Vercel's production address automatically. When you add a domain, set `SITE_URL` to it in Vercel. No `og:image` is set yet. Add a 1200×630 image and the tags in `layouts/Base.astro` once one exists.
+
+To deploy from this folder without GitHub:
+
+```bash
+npx vercel          # first time: log in, link the project, answer the prompts
+npx vercel --prod   # publish to production
+```

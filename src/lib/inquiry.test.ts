@@ -22,6 +22,11 @@ test('required fields and formats are enforced', () => {
   assert.deepEqual(Object.keys(e).sort(), ['description', 'email', 'name', 'projectType']);
 });
 
+test('length limits hold on the server as well as in the browser', () => {
+  const e = validate({ ...ok, name: 'A'.repeat(121), email: `${'a'.repeat(150)}@example.com`, company: 'C'.repeat(161) }, types, budgets);
+  assert.deepEqual(Object.keys(e).sort(), ['company', 'email', 'name']);
+});
+
 test('budget must come from the list when given', () => {
   assert.ok(validate({ ...ok, budget: 'A million' }, types, budgets).budget);
   assert.equal(validate({ ...ok, budget: 'Under ₹2 lakh' }, types, budgets).budget, undefined);

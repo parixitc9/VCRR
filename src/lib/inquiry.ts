@@ -9,8 +9,10 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function validate(d: Inquiry, projectTypes: string[], budgets: string[]): Partial<Record<Field, string>> {
   const e: Partial<Record<Field, string>> = {};
   if (!d.name.trim()) e.name = 'Tell us your name.';
+  else if (d.name.trim().length > 120) e.name = 'Keep the name under 120 characters.';
   if (!d.email.trim()) e.email = 'Add an email address so we can reply.';
-  else if (!EMAIL.test(d.email.trim())) e.email = 'That email looks incomplete. Check for a missing @ or domain.';
+  else if (d.email.trim().length > 160 || !EMAIL.test(d.email.trim())) e.email = 'That email looks incomplete. Check for a missing @ or domain.';
+  if (d.company.trim().length > 160) e.company = 'Keep the company name under 160 characters.';
   if (!projectTypes.includes(d.projectType)) e.projectType = 'Choose the closest project type, or “Not sure yet”.';
   if (d.budget && !budgets.includes(d.budget)) e.budget = 'Choose a budget range from the list, or leave it empty.';
   const len = d.description.trim().length;

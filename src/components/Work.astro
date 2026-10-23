@@ -1,6 +1,6 @@
 ---
 import SectionHead from './SectionHead.astro';
-import { work, statusLabel } from '../data/site.ts';
+import { work } from '../data/site.ts';
 
 // torn receipt edge
 const zig = Array.from({ length: 13 }, (_, i) => `${(i * 100) / 12}% ${i % 2 ? 100 : 94}%`).join(', ');
@@ -15,13 +15,10 @@ const sheets = [
 ---
 
 <section id="work" class="section s-paper-2 lines" aria-labelledby="work-title">
-  <SectionHead index="04" label="Selected work" aside="Concept studies, labelled as such" />
+  <SectionHead index="04" label="Selected work" aside={`${work.length} live projects`} />
   <div class="wrap grid head">
     <h2 id="work-title" class="h-xl">Selected <span class="mark">work.</span></h2>
-    <p class="intro mu">
-      Client case studies are published here only with the client's permission. Until then, these are concept studies: how we approach the
-      problems the studio is built to solve. None of them is presented as a client deployment.
-    </p>
+    <p class="intro mu">Live projects from our portfolio. Each one links to the working site, so you can see it before you get in touch.</p>
   </div>
 
   <ol class="wrap list">
@@ -84,12 +81,12 @@ const sheets = [
               </>
             )}
             <span class="mono fig">
-              fig. 03.{i + 1} — {w.status === 'concept' ? 'concept' : 'project'}
+              fig. 03.{i + 1} — live
             </span>
           </div>
 
           <div class="info">
-            <p class={`status mono ${w.status}`}>{statusLabel[w.status]}</p>
+            <p class="status mono">Live project</p>
             <p class="mono mu">
               {w.category} / {w.sector}
             </p>
@@ -109,17 +106,15 @@ const sheets = [
                   <dd>{w.stack.join(' / ')}</dd>
                 </div>
               )}
+              <div>
+                <dt class="mono">Live site</dt>
+                <dd><a href={w.url}>{w.url.replace(/^https?:\/\//, '')}</a></dd>
+              </div>
             </dl>
-            {w.href ? (
-              <a class="tlink" href={w.href}>
-                Read the case study<span class="sr-only">: {w.title}</span> <span class="arr" aria-hidden="true">→</span>
-              </a>
-            ) : (
-              <a class="tlink" href="#contact" data-type={w.type}>
-                Discuss a system like this<span class="sr-only">: {w.category.toLowerCase()}</span>{' '}
-                <span class="arr" aria-hidden="true">→</span>
-              </a>
-            )}
+            <a class="tlink" href="#contact" data-type={w.type}>
+              Discuss a system like this<span class="sr-only">: {w.category.toLowerCase()}</span>{' '}
+              <span class="arr" aria-hidden="true">→</span>
+            </a>
           </div>
         </li>
       ))
@@ -157,15 +152,18 @@ const sheets = [
   }
 
   /* alternating scale and position on one grid */
-  .item-1 .art {
+  .item-1 .art,
+  .item-4 .art {
     grid-column: 1 / 9;
     aspect-ratio: 4 / 3;
   }
-  .item-1 .info {
+  .item-1 .info,
+  .item-4 .info {
     grid-column: 9 / -1;
     align-self: end;
   }
-  .item-1 .idx {
+  .item-1 .idx,
+  .item-4 .idx {
     left: -0.06em;
   }
   .item-2 .info {
@@ -215,13 +213,6 @@ const sheets = [
   .status {
     padding: 4px 8px;
     border: var(--rule) solid var(--ink);
-  }
-  .status.concept {
-    background: var(--paper);
-    color: var(--hi);
-    border-color: var(--hi);
-  }
-  .status.client {
     background: var(--accent);
   }
   .info h3 {

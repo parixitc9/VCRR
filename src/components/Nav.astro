@@ -1,15 +1,18 @@
 ---
 import Wordmark from './Wordmark.astro';
 import { nav } from '../data/site.ts';
+
+const { home = '' } = Astro.props;
+const links = nav.map((l) => ({ ...l, href: home + l.href }));
 ---
 
 <header class="nav s-paper">
   <div class="bar">
-    <a class="brand" href="#top" aria-label="VCRR, back to top"><Wordmark /></a>
+    <a class="brand" href={home + '#top'} aria-label="VCRR, back to top"><Wordmark /></a>
     <nav class="links" aria-label="Primary">
       <ul>
         {
-          nav.map((l, i) => (
+          links.map((l, i) => (
             <li>
               <a href={l.href}>
                 <span class="mono n" aria-hidden="true">0{i + 1}</span>
@@ -20,7 +23,7 @@ import { nav } from '../data/site.ts';
         }
       </ul>
     </nav>
-    <a class="cta" href="#contact">Start a project <span class="arr" aria-hidden="true">↘</span></a>
+    <a class="cta" href={home + '#contact'}>Start a project <span class="arr" aria-hidden="true">↘</span></a>
     <button class="menu-btn" type="button" popovertarget="menu" aria-label="Open menu">
       <span aria-hidden="true" class="burger"><i></i><i></i></span>
       <span class="mono">Menu</span>
@@ -36,7 +39,7 @@ import { nav } from '../data/site.ts';
     <nav aria-label="Mobile">
       <ul>
         {
-          nav.map((l, i) => (
+          links.map((l, i) => (
             <li>
               <a href={l.href}>
                 <span class="mono">0{i + 1}</span>
@@ -47,7 +50,7 @@ import { nav } from '../data/site.ts';
         }
       </ul>
     </nav>
-    <a class="btn" href="#contact">Start a project <span class="arr" aria-hidden="true">↘</span></a>
+    <a class="btn" href={home + '#contact'}>Start a project <span class="arr" aria-hidden="true">↘</span></a>
   </div>
 </header>
 

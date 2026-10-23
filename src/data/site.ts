@@ -14,18 +14,18 @@ export const site = {
   tagline: 'Software · Apps · Automation',
   description:
     'VCRR is a software studio founded by four partners. Any kind of software, built to your business requirements: business systems, web and mobile apps, desktop tools and automation.',
-  email: '[CONTACT_EMAIL]',
-  phone: '[COMPANY_PHONE]',
-  /** Digits only, with country code. Used for wa.me links. */
-  whatsapp: '[WHATSAPP_NUMBER]',
-  address: '[OFFICE_ADDRESS]',
+  email: 'vcrrit@gmail.com',
+  /** Indian mobile numbers, shown with country code. Each one gets a tel: link. */
+  phones: ['+91 98248 02936', '+91 94278 18152', '+91 96645 88257', '+91 70466 98582'],
+  /** Shown with country code. Its digits feed the wa.me link. */
+  whatsapp: '+91 70466 98582',
   /** Only add profiles that exist. Empty = no social links rendered. */
   social: [] as { label: string; href: string }[],
 };
 
 export const channels = () => [
   { label: 'Email', value: site.email, href: isPlaceholder(site.email) ? null : `mailto:${site.email}` },
-  { label: 'Phone', value: site.phone, href: isPlaceholder(site.phone) ? null : `tel:${site.phone.replace(/[^\d+]/g, '')}` },
+  ...site.phones.map((p) => ({ label: 'Phone', value: p, href: isPlaceholder(p) ? null : `tel:${p.replace(/[^\d+]/g, '')}` })),
   { label: 'WhatsApp', value: site.whatsapp, href: isPlaceholder(site.whatsapp) ? null : `https://wa.me/${site.whatsapp.replace(/\D/g, '')}` },
 ];
 
@@ -141,15 +141,12 @@ export const builds = [
 ];
 
 /* ----------------------------------------------------------------------- work */
-// No client case study is published yet, so these are concept studies, always labelled as such.
-// To publish a real project: add an entry with status 'client', only with the client's permission.
+// Live projects. Each entry links to the working site.
 
-export type WorkStatus = 'client' | 'concept';
 export type Artifact = 'receipt' | 'ledger' | 'flow';
 
 export interface Work {
   title: string;
-  status: WorkStatus;
   category: string;
   sector: string;
   problem: string;
@@ -159,53 +156,55 @@ export interface Work {
   type: string;
   /** Documented stack only. Empty = not shown. */
   stack: string[];
-  /** Case-study page, only if one exists. */
-  href: string | null;
+  /** The live site. */
+  url: string;
 }
-
-export const statusLabel: Record<WorkStatus, string> = {
-  client: 'Client project',
-  concept: 'Concept study, not a client deployment',
-};
 
 export const work: Work[] = [
   {
-    title: 'The counter that never waits',
-    status: 'concept',
-    category: 'Offline-first billing',
-    sector: 'Retail',
-    problem:
-      'A billing tool that slows down at peak hours and stops when the internet does. Bills get written by hand and typed in later, with mistakes.',
-    approach: 'Counter billing that saves every bill on the device and syncs when the connection returns.',
+    title: 'Counterly',
+    category: 'Billing and inventory',
+    sector: 'Shops, wholesalers and small factories',
+    problem: 'Shops and small factories need GST invoices, stock and real profit in one place.',
+    approach: 'A Windows app that keeps everything on your own PC: GST tax invoices, stock lots and gross profit on every sale.',
     artifact: 'receipt',
     type: 'Billing or inventory',
     stack: [],
-    href: null,
+    url: 'https://counterlyweb.vercel.app',
   },
   {
-    title: 'One schedule, every team',
-    status: 'concept',
-    category: 'Booking and scheduling',
-    sector: 'Service businesses',
-    problem: 'Bookings arrive by phone and chat, live in a paper diary, and clash. Staff find out about changes too late.',
-    approach: 'Online booking, a shared staff calendar with automatic reminders, and a mobile app for the people doing the work.',
+    title: 'The Brown Print',
+    category: 'Photography and film studio',
+    sector: 'Weddings, concerts and events across Canada',
+    problem: 'Film and photography from many kinds of events needs one place to browse, and one way for people to get in touch.',
+    approach: 'A landing gate into a WebGL archive of the work, a page for each category, and an enquiry form that confirms on its own page.',
     artifact: 'ledger',
-    type: 'Custom business software',
-    stack: [],
-    href: null,
+    type: 'Website',
+    stack: ['HTML', 'CSS', 'JavaScript', 'WebGL'],
+    url: 'https://thebrownprint.vercel.app',
   },
   {
-    title: 'Five spreadsheets, retired',
-    status: 'concept',
-    category: 'Operations system',
-    sector: 'Growing companies',
-    problem: 'Tools that worked at ten people are held together with spreadsheets at a hundred. Departments disagree about which number is right.',
-    approach:
-      'One system replacing the duplicated sheets, with roles and permissions, an audit trail and current reports, introduced without stopping daily work.',
-    artifact: 'flow',
-    type: 'Custom business software',
+    title: 'parixit.dev',
+    category: 'Personal portfolio and client websites',
+    sector: 'Businesses, worldwide',
+    problem: 'A business needs a website that looks serious, without a long agency process.',
+    approach: 'Design, code and launch handled end to end by one full-stack developer.',
+    artifact: 'ledger',
+    type: 'Website',
     stack: [],
-    href: null,
+    url: 'https://www.parixit.dev',
+  },
+  {
+    title: 'YantraShruti 2026',
+    category: 'Event site and shortlisting',
+    sector: 'College hackathon',
+    problem: 'Team registrations, project files and the shortlist need to live in one place, not scattered across email and folders.',
+    approach:
+      'Team registration and PDF upload on the event site, saved to a shared sheet, with shortlist tracking and shortlist emails sent from the sheet.',
+    artifact: 'flow',
+    type: 'Web application or portal',
+    stack: ['Google Apps Script', 'Google Sheets', 'Google Drive'],
+    url: 'https://yantrashruti.vercel.app',
   },
 ];
 
