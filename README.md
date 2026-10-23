@@ -3,7 +3,7 @@
 A second, self-contained VCRR website. It has the same Prompt design and colours as `../vcrr-surreal-modern-brutal`, but the copy is broadened: VCRR builds any kind of software from a business's requirements, and billing and inventory are one offering among many. Content lives in `src/data/site.ts`; "What we build" (`components/Builds.astro`) lists example software types.
 
 - **Stack:** Astro 7 (static), plain CSS with tokens, a little vanilla TypeScript, and [Lenis](https://lenis.darkroom.engineering/) for smooth scrolling (the original site uses it too). No shared runtime with the original.
-- **No database, no analytics, no cookies, no third-party requests on page load.** Fonts are self-hosted via Fontsource. The one backend is the inquiry form's function (see *Inquiry form*).
+- **No backend, no forms, no analytics, no cookies, no third-party requests.** Fonts are self-hosted via Fontsource.
 
 ## Run it
 
@@ -15,7 +15,6 @@ npm run dev        # http://localhost:4325 (4321-4324 belong to the other two si
 npm run build      # static site in dist/
 npm run preview    # serve dist/ locally
 npm run check      # Astro + TypeScript checks
-npm test           # inquiry-form rules and the form endpoint (node:test)
 ```
 
 ## Brand and motion
@@ -30,47 +29,29 @@ npm test           # inquiry-form rules and the form endpoint (node:test)
 ```
 src/
   data/site.ts         all copy and facts (adapted from the original's src/data/site.ts)
-  lib/inquiry.ts       form validation + brief text (tested in inquiry.test.ts)
   layouts/Base.astro   head/SEO, motion flag, nav, footer (home="/" on other pages)
   pages/privacy.astro  privacy policy, linked from the footer
   components/          Nav, Hero (the film), Manifesto, Services (+Glyph), Builds, Work,
                        Why, Process, Contact, Footer, SectionHead, Wordmark (the lockup)
-  scripts/main.ts      Lenis, scroll-linked motion, reveals, "start with this" form preselect
+  scripts/main.ts      Lenis, scroll-linked motion, reveals
   styles/global.css    tokens, surfaces, grid, buttons, motion
-  lib/inquiry-endpoint.ts  server side of the form (tested in inquiry-endpoint.test.ts)
-api/inquiry.ts         Vercel function behind the form
-apps-script/inquiry.gs Google Apps Script bound to the briefs sheet: saves, emails, confirms
 ```
 
 ## Content: what is real and what is not
 
 Most copy comes from the original site, and nothing there was invented. The exceptions are listed below. That means:
 
-- **Privacy policy** (`pages/privacy.astro`) describes what the site does today: no analytics, cookies or browser storage, and fonts served from the site's own domain. Before launch, complete the bracketed fields (log retention, how long enquiries are kept, legal entity name, data-question contact) and have it reviewed by counsel.
+- **Privacy policy** (`pages/privacy.astro`) describes what the site does today: no forms, no analytics, cookies or browser storage, and fonts served from the site's own domain. Before launch, complete the bracketed fields (log retention, how long enquiries are kept, legal entity name, data-question contact) and have it reviewed by counsel.
 - **Contact details** are set in `site.ts`: one email, four phone numbers and one WhatsApp number. All are Indian mobiles, shown with `+91`. There is no office address on the site. Social links are hidden while `social` is empty.
 - **Work:** four live projects from the portfolio list, each linking to its working site. The problem and approach lines were written from each site's own description or code, so check them. The artwork beside each project is abstract and reused, not a screenshot.
 - **What we build:** the twelve entries in `builds` are examples of software types, not past projects. Edit or extend the list freely.
-- **Commitments** (code ownership, written scope, tested backups, documentation) and the budget ranges are copied as-is. The original's README asks you to confirm these before launch.
-
-## Inquiry form
-
-The form validates in the browser (name, email, project type and a 20+ character description are required; company and budget are optional). It never claims a message was sent unless it was.
-
-The live path is: browser → `/api/inquiry` (a Vercel function) → a Google Apps Script bound to the inquiry sheet (`inquiry_VCRR`) → a row on its first tab, an email to `vcrrit@gmail.com`, and a confirmation email to the visitor. The form shows *Received* only on a 2xx response and keeps the answers on any error.
-
-- **The function** (`api/inquiry.ts`, logic in `src/lib/inquiry-endpoint.ts`) re-checks every field with the browser's rules. It answers submissions where the `website` spam trap is filled as sent, but sends nothing. It refuses bodies over 10 KB and forwards the visitor's IP to the script. The script's URL and secret never reach the browser.
-- **The script** (`apps-script/inquiry.gs`, set up as described at its top) checks the shared secret and allows 3 briefs per IP per hour and 30 a day. For each brief it adds a row with a Brief ID such as `VCRR-0001` to the first tab of that one sheet, emails the sheet owner with the sender as reply-to, and emails the visitor a confirmation. If the row or the owner email fails, the site shows *"Not sent"*. Each row also records whether the owner email and the confirmation went out, with the reason if one failed. The function logs any script failure in the Vercel logs.
-- **Environment variables**, set in Vercel under Project → Settings → Environment Variables. Never give a secret a `PUBLIC_` name.
-  - `PUBLIC_INQUIRY_ENDPOINT` = `/api/inquiry`. It is read at build time, so redeploy after changing it.
-  - `INQUIRY_SCRIPT_URL` = the Apps Script web app URL, which ends in `/exec`.
-  - `INQUIRY_SECRET` = a random string, the same value as the script property `INQUIRY_SECRET`.
-- Without `PUBLIC_INQUIRY_ENDPOINT`, the form shows *"Not sent"* and offers *Copy brief* and *Open in email app* instead.
+- **Commitments** (code ownership, written scope, tested backups, documentation) are copied as-is. The original's README asks you to confirm these before launch.
 
 ## Motion and accessibility
 
 - `prefers-reduced-motion`: no film, no reveals, no Lenis (native scrolling). The finished lockup shows at once. Without JavaScript, the page is complete and static.
 - No scroll hijacking, no custom cursor, no loading screen. The hero entrance is CSS only.
-- Skip link, semantic landmarks and headings, a real `<table>` for the comparison (it becomes labelled records on phones), a native `popover` mobile menu (Escape closes it), visible focus everywhere, and inline form errors with `aria-invalid`. Decorative objects are `aria-hidden`; every fact they show is stated in text.
+- Skip link, semantic landmarks and headings, a real `<table>` for the comparison (it becomes labelled records on phones), a native `popover` mobile menu (Escape closes it), and visible focus everywhere. Decorative objects are `aria-hidden`; every fact they show is stated in text.
 
 ## Deploying
 

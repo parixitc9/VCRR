@@ -34,10 +34,3 @@ if (motion) {
   lenis.on('scroll', update);
   update();
 }
-
-/* ---------- "start with this" links preselect the project type in the inquiry form ---------- */
-document.addEventListener('click', (e) => {
-  const link = (e.target as Element).closest<HTMLElement>('[data-type]');
-  const select = document.querySelector<HTMLSelectElement>('#projectType');
-  if (link && select) select.value = link.dataset.type ?? '';
-});

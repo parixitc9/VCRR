@@ -79,8 +79,6 @@ export interface Service {
   solution: string;
   includes: string[];
   glyph: Glyph;
-  /** Project type preselected in the inquiry form by this module's link. Must exist in projectTypes. */
-  type: string;
 }
 
 export const services: Service[] = [
@@ -91,7 +89,6 @@ export const services: Service[] = [
       'Systems shaped around how your business actually runs: your workflow, your data, your rules. From a single internal tool to the system the whole company works in.',
     includes: ['Business management systems', 'Billing and inventory', 'Booking and scheduling', 'Database-driven systems', 'Internal tools'],
     glyph: 'slabs',
-    type: 'Custom business software',
   },
   {
     title: 'Web, mobile and desktop apps',
@@ -100,7 +97,6 @@ export const services: Service[] = [
       'Web applications and portals, Android and iOS apps, and desktop software with offline-first storage where the connection cannot be trusted.',
     includes: ['Web applications', 'Customer portals', 'Mobile applications', 'Desktop and offline-first apps', 'Business websites'],
     glyph: 'frames',
-    type: 'Web application or portal',
   },
   {
     title: 'Automation and integrations',
@@ -109,7 +105,6 @@ export const services: Service[] = [
       'Scripts, scheduled jobs and integrations that move data between the tools you already use, and take the repetitive work off people.',
     includes: ['Business process automation', 'Scripts and scheduled jobs', 'System integrations and APIs', 'Reports and alerts'],
     glyph: 'cube',
-    type: 'Automation or integration',
   },
   {
     title: 'Product design and identity',
@@ -118,7 +113,6 @@ export const services: Service[] = [
       'Workflow mapping, prototypes tested with the people who will use them, and a component system that keeps every screen consistent. Brand identity when the product needs one.',
     includes: ['UI and UX design', 'Design systems', 'Prototyping', 'Brand identity'],
     glyph: 'compass',
-    type: 'Design or branding',
   },
 ];
 
@@ -152,8 +146,6 @@ export interface Work {
   problem: string;
   approach: string;
   artifact: Artifact;
-  /** Project type preselected by the "discuss" link. Must exist in projectTypes. */
-  type: string;
   /** Documented stack only. Empty = not shown. */
   stack: string[];
   /** The live site. */
@@ -168,7 +160,6 @@ export const work: Work[] = [
     problem: 'Shops and small factories need GST invoices, stock and real profit in one place.',
     approach: 'A Windows app that keeps everything on your own PC: GST tax invoices, stock lots and gross profit on every sale.',
     artifact: 'receipt',
-    type: 'Billing or inventory',
     stack: [],
     url: 'https://counterlyweb.vercel.app',
   },
@@ -179,7 +170,6 @@ export const work: Work[] = [
     problem: 'Film and photography from many kinds of events needs one place to browse, and one way for people to get in touch.',
     approach: 'A landing gate into a WebGL archive of the work, a page for each category, and an enquiry form that confirms on its own page.',
     artifact: 'ledger',
-    type: 'Website',
     stack: ['HTML', 'CSS', 'JavaScript', 'WebGL'],
     url: 'https://thebrownprint.vercel.app',
   },
@@ -190,7 +180,6 @@ export const work: Work[] = [
     problem: 'A business needs a website that looks serious, without a long agency process.',
     approach: 'Design, code and launch handled end to end by one full-stack developer.',
     artifact: 'ledger',
-    type: 'Website',
     stack: [],
     url: 'https://www.parixit.dev',
   },
@@ -202,7 +191,6 @@ export const work: Work[] = [
     approach:
       'Team registration and PDF upload on the event site, saved to a shared sheet, with shortlist tracking and shortlist emails sent from the sheet.',
     artifact: 'flow',
-    type: 'Web application or portal',
     stack: ['Google Apps Script', 'Google Sheets', 'Google Drive'],
     url: 'https://yantrashruti.vercel.app',
   },
@@ -279,20 +267,3 @@ export const steps = [
     deliverable: 'A running system, documentation and an agreed support arrangement.',
   },
 ];
-
-/* ---------------------------------------------------------------- inquiry form */
-
-export const projectTypes = [
-  'Custom business software',
-  'Web application or portal',
-  'Mobile app',
-  'Desktop application',
-  'Automation or integration',
-  'Billing or inventory',
-  'Website',
-  'Design or branding',
-  'Not sure yet',
-];
-
-/** Indicative ranges only, copied from the original site. Optional field. */
-export const budgets = ['Not sure yet', 'Under ₹2 lakh', '₹2 to 5 lakh', '₹5 to 15 lakh', 'Above ₹15 lakh'];
