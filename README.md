@@ -39,7 +39,7 @@ src/
   styles/global.css    tokens, surfaces, grid, buttons, motion
   lib/inquiry-endpoint.ts  server side of the form (tested in inquiry-endpoint.test.ts)
 api/inquiry.ts         Vercel function behind the form
-apps-script/inquiry.gs Google Apps Script that emails each brief
+apps-script/inquiry.gs Google Apps Script bound to the briefs sheet: saves, emails, confirms
 ```
 
 ## Content: what is real and what is not
@@ -56,10 +56,10 @@ Most copy comes from the original site, and nothing there was invented. The exce
 
 The form validates in the browser (name, email, project type and a 20+ character description are required; company and budget are optional). It never claims a message was sent unless it was.
 
-The live path is: browser → `/api/inquiry` (a Vercel function) → a Google Apps Script → an email to `vcrrit@gmail.com`. The form shows *Received* only on a 2xx response and keeps the answers on any error.
+The live path is: browser → `/api/inquiry` (a Vercel function) → a Google Apps Script bound to the inquiry sheet (`inquiry_VCRR`) → a row on its first tab, an email to `vcrrit@gmail.com`, and a confirmation email to the visitor. The form shows *Received* only on a 2xx response and keeps the answers on any error.
 
 - **The function** (`api/inquiry.ts`, logic in `src/lib/inquiry-endpoint.ts`) re-checks every field with the browser's rules. It answers submissions where the `website` spam trap is filled as sent, but sends nothing. It refuses bodies over 10 KB and forwards the visitor's IP to the script. The script's URL and secret never reach the browser.
-- **The script** (`apps-script/inquiry.gs`) checks the shared secret, allows 3 briefs per IP per hour and 30 a day, and emails each brief with the sender as reply-to. Its limits live in the script, so they survive restarts.
+- **The script** (`apps-script/inquiry.gs`, set up as described at its top) checks the shared secret and allows 3 briefs per IP per hour and 30 a day. For each brief it adds a row with a Brief ID such as `VCRR-0001` to the first tab of that one sheet, emails the sheet owner with the sender as reply-to, and emails the visitor a confirmation. If the row or the owner email fails, the site shows *"Not sent"*. Each row also records whether the owner email and the confirmation went out, with the reason if one failed. The function logs any script failure in the Vercel logs.
 - **Environment variables**, set in Vercel under Project → Settings → Environment Variables. Never give a secret a `PUBLIC_` name.
   - `PUBLIC_INQUIRY_ENDPOINT` = `/api/inquiry`. It is read at build time, so redeploy after changing it.
   - `INQUIRY_SCRIPT_URL` = the Apps Script web app URL, which ends in `/exec`.

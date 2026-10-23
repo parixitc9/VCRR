@@ -58,12 +58,15 @@ export async function handleInquiry(req: Request, env: Env, fetchFn: FetchLike =
       redirect: 'follow',
       signal: AbortSignal.timeout(10_000),
     });
-  } catch {
+  } catch (err) {
+    console.error('Inquiry script unreachable:', err);
     return reply(502, { ok: false, error: 'unreachable' });
   }
 
   const result = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
   if (result?.ok) return reply(200, { ok: true });
   if (result?.error === 'limit') return reply(429, { ok: false, error: 'limit' });
+  // Lands in the Vercel function logs, so a failing script is never silent.
+  console.error('Inquiry script failed:', result?.error ?? `HTTP ${res.status} without a JSON answer`);
   return reply(502, { ok: false, error: 'failed' });
 }
